@@ -155,11 +155,22 @@ function articleComponent({title, date, firstParagraph, secondParagraph, thirdPa
 
   const btnExpand = document.createElement('span');
   btnExpand.classList.add('expandButton')
-  btnExpand.textContent = "Read more";
-  btnExpand.addEventListener('click', e =>  {
-    articleWrapper.classList.toggle('article-open')
-  });
+  btnExpand.textContent = "More...";
+  btnExpand.addEventListener('click', clickHandler);
   articleWrapper.appendChild(btnExpand);
+
+  const btnClose = document.createElement('span');
+  btnClose.classList.add('contractButton');
+  btnClose.classList.add('hide');
+  btnClose.textContent = "Less";
+  btnClose.addEventListener('click', clickHandler);
+  articleWrapper.appendChild(btnClose)
+
+  function clickHandler(e) {
+    btnExpand.classList.toggle('hide');
+    btnClose.classList.toggle('hide');
+    articleWrapper.classList.toggle('article-open');
+  }
 
   return articleWrapper;
 }
