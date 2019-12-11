@@ -33,3 +33,24 @@ let menuItems = [
   Step 6: add the menu component to the DOM.
   
 */
+
+function menuComponent(menuItems) {
+  const navWarpper = document.createElement('div');
+  navWarpper.classList.add('menu');
+
+  const ul = document.createElement('ul');
+  const list = menuItems.map(item => {
+    return `<li><a href="#">${item}</a></li>`;
+  }).join('')
+  ul.innerHTML = list
+
+  const toggleMenuEl = document.querySelector('.menu-button');
+  toggleMenuEl.addEventListener('click', e => navWarpper.classList.toggle('menu--open'));
+
+  navWarpper.appendChild(ul);
+
+  return navWarpper;
+}
+
+document.querySelector('.header')
+.appendChild(menuComponent(menuItems));
