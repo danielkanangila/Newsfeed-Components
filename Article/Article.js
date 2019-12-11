@@ -1,5 +1,6 @@
 /* This is the data we will be using to create our article components */
 /* Look over this data, then proceed to line 91*/
+const html = String.raw;
 const data = [
   {
     title: 'Lambda School Students: "We\'re the best!"',
@@ -112,3 +113,44 @@ const data = [
   Step 5: Add a new article to the array. Make sure it is in the same format as the others. Refresh the page to see the new article.
 
 */
+function articleComponent({title, date, firstParagraph, secondParagraph, thirdParagraph}) {
+  
+  const paragraphs = [firstParagraph, secondParagraph, thirdParagraph];
+
+  const articleWrapper = document.createElement('div');
+  articleWrapper.classList.add('article');
+
+  const articleTitle = document.createElement('h2');
+  articleTitle.textContent = title
+  articleWrapper.appendChild(articleTitle)
+
+  const pDate = document.createElement('p');
+  pDate.classList.add('date');
+  pDate.textContent = date;
+  articleWrapper.appendChild(pDate);
+
+  paragraphs.forEach(text => {
+    const p = document.createElement('p');
+    p.textContent = text;
+    articleWrapper.appendChild(p);
+  });
+
+  const btnExpand = document.createElement('span');
+  btnExpand.classList.add('expandButton')
+  btnExpand.textContent = "Read more";
+  btnExpand.addEventListener('click', e =>  {
+    articleWrapper.classList.toggle('article-open')
+  });
+  articleWrapper.appendChild(btnExpand);
+
+  return articleWrapper;
+}
+
+const articlesEl = document.querySelector('.articles');
+data.forEach(item => {
+  articlesEl.appendChild(
+    articleComponent({...item})
+  );
+});
+
+//articlesEl.innerHTML = articleComponents;
