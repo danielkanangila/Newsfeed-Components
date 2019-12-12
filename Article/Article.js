@@ -137,63 +137,33 @@ const data = [
  * @returns article component
  */
 function articleComponent({title, date, firstParagraph, secondParagraph, thirdParagraph}) {
+  const parser = new DOMParser()
+  // paragraphs template
+  const paragraphs = [firstParagraph, secondParagraph, thirdParagraph]
+    .map(content => `<p>${content}</p>`).join((''));
+
+  const template = html`
+    <div class="article">
+      <h2>${title}</h2>
+      <p class="date">${date}</p>
+      ${paragraphs}
+      <span class='expandButton'>More</span>
+    </div>
+  `
+  const component = parser.parseFromString(template, 'text/html').body.firstChild;
   
-  // Create an array with 3 paragraphs
-  const paragraphs = [firstParagraph, secondParagraph, thirdParagraph];
+  // Add click event and handle event on span as button o/c
+  component.querySelector('.expandButton').addEventListener('click', e => {
+    if (e.target.textContent === 'More') {
+      e.target.textContent = 'Less';
+    } else {
+      e.target.textContent = 'More';
+    }
 
-  // Create wrapper div and add article class to the div
-  const articleWrapper = document.createElement('div');
-  articleWrapper.classList.add('article');
-
-  // Create  h2 element for article's title
-  // ... and append element to the wrapper div
-  const articleTitle = document.createElement('h2');
-  articleTitle.textContent = title
-  articleWrapper.appendChild(articleTitle)
-
-  // Create p element for date of publish
-  // and append element to the wrapper div
-  const pDate = document.createElement('p');
-  pDate.classList.add('date');
-  pDate.textContent = date;
-  articleWrapper.appendChild(pDate);
-
-  // Loop throught paragraphs array, create p element for each p element
-  // and append element the wrapper div
-  paragraphs.forEach(text => {
-    const p = document.createElement('p');
-    p.textContent = text;
-    articleWrapper.appendChild(p);
-  });
-
-  // Create span element as button, add click event listener.
-  // This button has as function to expand the wrapper div to allow user to read full article
-  // and and append element the wrapper div
-  const btnExpand = document.createElement('span');
-  btnExpand.classList.add('expandButton')
-  btnExpand.textContent = "More...";
-  btnExpand.addEventListener('click', clickHandler);
-  articleWrapper.appendChild(btnExpand);
-
-  // Create span element as button, add click event listener.
-  // This button has as function to contract the wrapper div and hide article paragraphs
-  // and and append element the wrapper div
-  const btnClose = document.createElement('span');
-  btnClose.classList.add('contractButton');
-  btnClose.classList.add('hide');
-  btnClose.textContent = "Less";
-  btnClose.addEventListener('click', clickHandler);
-  articleWrapper.appendChild(btnClose)
-
-  // Click handler callback for expand and close button
-  function clickHandler(e) {
-    btnExpand.classList.toggle('hide');
-    btnClose.classList.toggle('hide');
-    articleWrapper.classList.toggle('article-open');
-  }
-
-  // returning the artilce component created
-  return articleWrapper;
+    component.classList.toggle('article-open');
+  })
+  
+  return component;
 }
 
 // Select articles section in the dom  and using articleComponent function 
