@@ -1,5 +1,6 @@
 /* This is the data we will be using to create our article components */
 /* Look over this data, then proceed to line 91*/
+const html = String.raw;
 const data = [
   {
     title: 'Lambda School Students: "We\'re the best!"',
@@ -85,7 +86,25 @@ const data = [
     thirdParagraph: `Hodor hodor - hodor... Hodor hodor hodor hodor. Hodor. Hodor! Hodor hodor, hodor hodor hodor hodor hodor; hodor hodor? Hodor!
           Hodor hodor, HODOR hodor, hodor hodor?! Hodor! Hodor hodor, HODOR hodor, hodor hodor, hodor, hodor hodor. Hodor, hodor.
           Hodor. Hodor, hodor, hodor. Hodor hodor... Hodor hodor hodor?! Hodor, hodor... Hodor hodor HODOR hodor, hodor hodor. Hodor.`
-  }
+  },
+  {
+    title: 'Object Oriented Programming in Java',
+    date: 'Aug 1st, 2019',
+    firstParagraph: `Lorem ipsum dolor sit amet consectetur 
+    adipisicing elit. Suscipit aperiam ea alias voluptate,
+     neque fugit architecto quae nostrum quas, nemo velit deserunt! 
+    Vitae labore, 
+    eligendi quam architecto incidunt obcaecati natus?`,
+
+    secondParagraph: `Hodor, hodor. Hodor. Hodor, hodor, hodor. Hodor hodor, hodor. Hodor hodor, hodor, hodor hodor. Hodor! Hodor hodor, hodor;
+          hodor hodor hodor? Hodor, hodor. Hodor. Hodor, hodor - HODOR hodor, hodor hodor hodor! Hodor, hodor. Hodor. Hodor, HODOR
+          hodor, hodor hodor, hodor, hodor hodor. Hodor hodor - hodor - hodor... Hodor hodor hodor hodor hodor hodor hodor?! Hodor
+          hodor - hodor hodor hodor. Hodor. Hodor hodor... Hodor hodor hodor hodor hodor? `,
+
+    thirdParagraph: `Hodor hodor - hodor... Hodor hodor hodor hodor. Hodor. Hodor! Hodor hodor, hodor hodor hodor hodor hodor; hodor hodor? Hodor!
+          Hodor hodor, HODOR hodor, hodor hodor?! Hodor! Hodor hodor, HODOR hodor, hodor hodor, hodor, hodor hodor. Hodor, hodor.
+          Hodor. Hodor, hodor, hodor. Hodor hodor... Hodor hodor hodor?! Hodor, hodor... Hodor hodor HODOR hodor, hodor hodor. Hodor.`
+  },
 ];
 
 /* Step 1: Create a function that creates a component. You will want your component to look like the template below: 
@@ -112,3 +131,47 @@ const data = [
   Step 5: Add a new article to the array. Make sure it is in the same format as the others. Refresh the page to see the new article.
 
 */
+/**
+ * Create article component
+ * @param {title, date, firstParagraph, secondParagraph, thirdParagraph} 
+ * @returns article component
+ */
+function articleComponent({title, date, firstParagraph, secondParagraph, thirdParagraph}) {
+  const parser = new DOMParser()
+  // paragraphs template
+  const paragraphs = [firstParagraph, secondParagraph, thirdParagraph]
+    .map(content => `<p>${content}</p>`).join((''));
+
+  const template = html`
+    <div class="article">
+      <h2>${title}</h2>
+      <p class="date">${date}</p>
+      ${paragraphs}
+      <span class='expandButton'>More</span>
+    </div>
+  `
+  const component = parser.parseFromString(template, 'text/html').body.firstChild;
+  
+  // Add click event and handle event on span as button o/c
+  component.querySelector('.expandButton').addEventListener('click', e => {
+    if (e.target.textContent === 'More') {
+      e.target.textContent = 'Less';
+    } else {
+      e.target.textContent = 'More';
+    }
+
+    component.classList.toggle('article-open');
+  })
+  
+  return component;
+}
+
+// Select articles section in the dom  and using articleComponent function 
+// to create article component for each entry in provided data
+// and append the article element to dom's article section.
+const articlesEl = document.querySelector('.articles');
+data.forEach(item => {
+  articlesEl.appendChild(
+    articleComponent({...item})
+  );
+});
